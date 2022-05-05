@@ -1,0 +1,24 @@
+{
+  "name": "boolean",
+  "version": "1.0.0",
+  "description": "Mod bot",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/WhoCutTheCheese/Boolean.git"
+  },
+  "author": "WhoCutTheCheese",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/WhoCutTheCheese/Boolean/issues"
+  },
+  "homepage": "https://github.com/WhoCutTheCheese/Boolean#readme",
+  "dependencies": {
+    "discord.js": "^13.6.0",
+    "fs": "^0.0.1-security",
+    "mongoose": "^6.3.2"
+  }
+}
