@@ -40,7 +40,7 @@ module.exports = {
         const warnEmbed = new MessageEmbed()
             .setDescription(`**Case:** #${caseNumberSet} | **Mod:** ${message.author.tag} | **Reason:** ${reason}`)
             .setColor(guildSettings.color)
-        message.channel.send({ content: `<:arrow_right:967329549912248341> **${warnUser.user.tag}** has been warned (Warns **#${warns}**)`, embeds: [warnEmbed] })
+        message.channel.send({ content: `<:arrow_right:967329549912248341> **${warnUser.user.tag}** has been warned (Warns **${warns}**)`, embeds: [warnEmbed] })
 
         
     },

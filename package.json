@@ -1,6 +1,6 @@
 {
   "name": "boolean",
-  "version": "1.0.0",
+  "version": "ALPHA-0.0.1",
   "description": "Mod bot",
   "main": "index.js",
   "scripts": {
