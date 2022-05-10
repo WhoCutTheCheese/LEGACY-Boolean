@@ -75,7 +75,7 @@ module.exports.listen = (client) => {
             guildID: guild.id
         })
         if(!guildSettings) {
-            return message.channel.send({ content: "An unknown error occurred, please try again. If this error persists please join our support server." }).catch(err)
+            return message.channel.send({ content: "An unknown error occurred, please try again. If this error persists please join our support server." }).catch(err => console.log(err));
         }
         const prefix = guildSettings.prefix;
         // Split on any number of spaces
@@ -102,7 +102,7 @@ module.exports.listen = (client) => {
                 // Ensure the user has the required permissions
                 for (const permission of userPermissions) {
                     if (!member.permissions.has(userPermissions)) {
-                        message.reply({ content: permissionError })
+                        message.reply({ content: permissionError }).catch(err => console.log(err));
                         return
                     }
                 }
@@ -116,7 +116,7 @@ module.exports.listen = (client) => {
                     if (!role || !member.roles.cache.has(role.id)) {
                         message.reply({
                             content: `You must have the "${requiredRole}" role to use this command.`
-                        })
+                        }).catch(err => console.log(err));
                         return
                     }
                 }
@@ -128,12 +128,12 @@ module.exports.listen = (client) => {
                 ) {
                     message.reply({
                         content: `Incorrect syntax! Use ${name} ${expectedArgs}`
-                    })
+                    }).catch(err => console.log(err));
                     return
                 }
 
                 // Handle the custom command code
-                callback(client, bot, message, args, args.join(' '), client)
+                callback(client, bot, message, args, args.join(' '), client).catch(err => console.log(err));
         }
     });
 }

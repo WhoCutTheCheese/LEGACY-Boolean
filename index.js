@@ -53,7 +53,8 @@ client.on('guildCreate', async guild => {
         prefix: "!!",
         color: "ff5959",
         premium: false,
-        premiumHolder: "None"
+        premiumHolder: "None",
+        totalCases: 0,
     })
     newGuild.save().catch(err => console.log(err));
 })
@@ -96,7 +97,8 @@ client.on('messageCreate', async message => {
                 prefix: "!!",
                 color: `ff5959`,
                 premium: false,
-                premiumHolder: "None"
+                premiumHolder: "None",
+                totalCases: 0,
             });
             newGuild.save()
                 .catch(err => console.error(err))

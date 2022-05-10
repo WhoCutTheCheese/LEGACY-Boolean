@@ -8,6 +8,7 @@ let Schema = new mongoose.Schema({
     color: String,
     premium: Boolean,
     premiumHolder: String,
+    totalCases: Number,
 })
 
 module.exports = mongoose.model('guild', Schema)
