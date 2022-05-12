@@ -68,13 +68,14 @@ module.exports = (commandOptions) => {
         }
     }
 }
+const talkedRecently = new Set();
 module.exports.listen = (client) => {
     client.on('messageCreate', async (message) => {
         const { member, content, guild } = message
         const guildSettings = await Guild.findOne({
             guildID: guild.id
         })
-        if(!guildSettings) {
+        if (!guildSettings) {
             return message.channel.send({ content: "An unknown error occurred, please try again. If this error persists please join our support server." }).catch(err => console.log(err));
         }
         const prefix = guildSettings.prefix;
@@ -88,52 +89,67 @@ module.exports.listen = (client) => {
             if (!command) {
                 return
             }
-                const { 
-                    userPermissions, 
-                    permissionError = 'You do not have permission to execute this command.', 
-                    requiredRoles = [], 
-                    minArgs = 0,
-                    maxArgs = null,
-                    expectedArgs = [],
-                    callback,
-             } = command
-                // A command has been ran
-
-                // Ensure the user has the required permissions
-                for (const permission of userPermissions) {
-                    if (!member.permissions.has(userPermissions)) {
-                        message.reply({ content: permissionError }).catch(err => console.log(err));
-                        return
-                    }
+            const {
+                userPermissions,
+                permissionError = 'You do not have permission to execute this command.',
+                requiredRoles = [],
+                minArgs = 0,
+                maxArgs = null,
+                expectedArgs = [],
+                cooldown = 0,
+                devOnly = false,
+                callback,
+            } = command
+            // A command has been ran
+            if(devOnly === true) {
+                if(message.author.id !== "493453098199547905") {
+                    return message.channel.send({ content: "This command is currently disabled! Join our support server for more information." })
                 }
-
-                // Ensure the user has the required roles
-                for (const requiredRole of requiredRoles) {
-                    const role = guild.roles.cache.find(
-                        (role) => role.name === requiredRole
-                    )
-
-                    if (!role || !member.roles.cache.has(role.id)) {
-                        message.reply({
-                            content: `You must have the "${requiredRole}" role to use this command.`
-                        }).catch(err => console.log(err));
-                        return
-                    }
+            }
+            if (talkedRecently.has(message.author.id)) {
+                return message.channel.send({ content: `You must wait ${cooldown} second(s) before using this again!` }).catch(err => console.log(err));
+            } else {
+                talkedRecently.add(message.author.id);
+                setTimeout(() => {
+                    // Removes the user from the set after a minute
+                    talkedRecently.delete(message.author.id);
+                }, cooldown * 1000);
+            }
+            // Ensure the user has the required permissions
+            for (const permission of userPermissions) {
+                if (!member.permissions.has(userPermissions)) {
+                    message.reply({ content: permissionError }).catch(err => console.log(err));
+                    return
                 }
+            }
 
-                // Ensure we have the correct number of args
-                if (
-                    args.length < minArgs ||
-                    (maxArgs !== null && args.length > maxArgs)
-                ) {
+            // Ensure the user has the required roles
+            for (const requiredRole of requiredRoles) {
+                const role = guild.roles.cache.find(
+                    (role) => role.name === requiredRole
+                )
+
+                if (!role || !member.roles.cache.has(role.id)) {
                     message.reply({
-                        content: `Incorrect syntax! Use ${name} ${expectedArgs}`
+                        content: `You must have the "${requiredRole}" role to use this command.`
                     }).catch(err => console.log(err));
                     return
                 }
+            }
 
-                // Handle the custom command code
-                callback(client, bot, message, args, args.join(' '), client).catch(err => console.log(err));
+            // Ensure we have the correct number of args
+            if (
+                args.length < minArgs ||
+                (maxArgs !== null && args.length > maxArgs)
+            ) {
+                message.reply({
+                    content: `Incorrect syntax! Use ${name} ${expectedArgs}`
+                }).catch(err => console.log(err));
+                return
+            }
+
+            // Handle the custom command code
+            callback(client, bot, message, args, args.join(' '), client).catch(err => console.log(err));
         }
     });
 }

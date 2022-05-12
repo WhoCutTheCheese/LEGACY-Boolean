@@ -6,6 +6,7 @@ module.exports = {
     commands: ['warn', 'w'],
     minArgs: 1,
     expectedArgs: "[@User/User ID] (Reason)",
+    cooldown: 1,
     userPermissions: ["MANAGE_MESSAGES"],
     callback: async (client, bot, message, args, text) => {
         let warnUser = message.mentions.members.first() || message.guild.members.cache.get(args[0]);
@@ -30,6 +31,7 @@ module.exports = {
             caseType: "Warn",
             caseReason: reason,
             caseNumber: caseNumberSet,
+            caseLength: "None",
         })
         newCases.save().catch()
         await Guild.findOneAndUpdate({

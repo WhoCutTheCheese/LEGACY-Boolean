@@ -5,6 +5,7 @@ module.exports = {
     commands: ['deleteallcases', 'clearallcases', 'wipeallcases', 'dac'],
     maxArgs: 0,
     minargs: 0,
+    cooldown: 60,
     callback: async (client, bot, message, args, text) => {
         if (message.author.id !== message.guild.ownerId) { return message.channel.send({ content: "You cannot use this!" }) }
 

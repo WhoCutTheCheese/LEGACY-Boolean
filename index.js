@@ -1,20 +1,26 @@
-const { Client, Intents, Collection, Interaction, Permissions } = require('discord.js');
+const {
+    Client,
+    Intents,
+    Collection,
+    Interaction,
+    Permissions
+} = require('discord.js');
 const fs = require('fs');
 const path = require("path");
 const mongoose = require("mongoose");
 const Guild = require('./models/guild');
 const Tokens = require('./models/tokens');
+const Config = require('./models/config');
 const client = new Client({
-    intents:
-        [
-            Intents.FLAGS.GUILDS,
-            Intents.FLAGS.GUILD_MESSAGES,
-            Intents.FLAGS.GUILD_BANS,
-            Intents.FLAGS.GUILD_PRESENCES,
-            Intents.FLAGS.GUILD_MEMBERS,
-            Intents.FLAGS.DIRECT_MESSAGES,
-            Intents.FLAGS.GUILD_MESSAGE_REACTIONS,
-        ]
+    intents: [
+        Intents.FLAGS.GUILDS,
+        Intents.FLAGS.GUILD_MESSAGES,
+        Intents.FLAGS.GUILD_BANS,
+        Intents.FLAGS.GUILD_PRESENCES,
+        Intents.FLAGS.GUILD_MEMBERS,
+        Intents.FLAGS.DIRECT_MESSAGES,
+        Intents.FLAGS.GUILD_MESSAGE_REACTIONS,
+    ]
 });
 client.mongoose = require('./utils/mongoose.js')
 client.on('ready', async () => {
@@ -25,23 +31,23 @@ client.on('ready', async () => {
     })
     const baseFile = 'command_base.js'
     const commandBase = require(`./commands/${baseFile}`)
-  
+
     const readCommands = (dir) => {
         const files = fs.readdirSync(path.join(__dirname, dir))
         for (const file of files) {
-          const stat = fs.lstatSync(path.join(__dirname, dir, file))
-          if (stat.isDirectory()) {
-            readCommands(path.join(dir, file))
-          } else if (file !== baseFile) {
-            const option = require(path.join(__dirname, dir, file))
-            commandBase(option)
-          }
+            const stat = fs.lstatSync(path.join(__dirname, dir, file))
+            if (stat.isDirectory()) {
+                readCommands(path.join(dir, file))
+            } else if (file !== baseFile) {
+                const option = require(path.join(__dirname, dir, file))
+                commandBase(option)
+            }
         }
-      }
-    
-      readCommands('commands')
-      commandBase.listen(client);
-      console.log("Boolean has started!")
+    }
+
+    readCommands('commands')
+    commandBase.listen(client);
+    console.log("Boolean has started!")
 })
 
 
@@ -51,12 +57,28 @@ client.on('guildCreate', async guild => {
         guildID: guild.id,
         guildName: guild.name,
         prefix: "!!",
-        color: "ff5959",
+        color: "5865F2",
         premium: false,
         premiumHolder: "None",
         totalCases: 0,
     })
     newGuild.save().catch(err => console.log(err));
+    const Config = Config.findOne({
+        guildID: guild.id,
+    }, (err, config) => {
+        if (err) console.error(err)
+        if (!config) {
+            const newConfig = new Config({
+                _id: mongoose.Types.ObjectId(),
+                guildID: guild.id,
+                muteRoleID: "None",
+                modLogChannel: "None",
+                joinRoleID: "None",
+            });
+            newConfig.save()
+                .catch(err => console.error(err))
+        };
+    });
 })
 
 client.on('guildDelete', async guild => {
@@ -95,12 +117,28 @@ client.on('messageCreate', async message => {
                 guildID: message.guild.id,
                 guildName: message.guild.name,
                 prefix: "!!",
-                color: `ff5959`,
+                color: `5865F2`,
                 premium: false,
                 premiumHolder: "None",
                 totalCases: 0,
             });
             newGuild.save()
+                .catch(err => console.error(err))
+        };
+    });
+    const config = Config.findOne({
+        guildID: message.guild.id,
+    }, (err, config) => {
+        if (err) console.error(err)
+        if (!config) {
+            const newConfig = new Config({
+                _id: mongoose.Types.ObjectId(),
+                guildID: message.guild.id,
+                muteRoleID: "None",
+                modLogChannel: "None",
+                joinRoleID: "None",
+            });
+            newConfig.save()
                 .catch(err => console.error(err))
         };
     });

@@ -8,6 +8,7 @@ let Schema = new mongoose.Schema({
     caseType: String,
     caseReason: String,
     caseNumber: String,
+    caseLength: String,
 })
 
 module.exports = mongoose.model('cases', Schema)
