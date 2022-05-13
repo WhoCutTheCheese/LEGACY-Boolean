@@ -1,4 +1,3 @@
-const { Client, Message, MessageActionRow, MessageButton, MessageEmbed, ButtonInteraction, Interaction } = require('discord.js');
 module.exports = {
     commands: ['ping', 'latency', 'p'],
     minArgs: 0,

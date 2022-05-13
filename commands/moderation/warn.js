@@ -21,7 +21,8 @@ module.exports = {
         })
         const warns = await Cases.countDocuments({
             guildID: message.guild.id,
-            userID: warnUser.id,
+            userID: muteUser.id,
+            caseType: "Warn",
         })
         const caseNumberSet = guildSettings.totalCases + 1;
         const newCases = await new Cases({

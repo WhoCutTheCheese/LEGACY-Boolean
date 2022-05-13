@@ -1,5 +1,6 @@
 const Guild = require('../models/guild');
 const bot = require('../package.json');
+const { Permissions } = require('discord.js')
 const validatePermissions = (userPermissions) => {
     const validPermissions = [
         'CREATE_INSTANT_INVITE',
@@ -101,8 +102,8 @@ module.exports.listen = (client) => {
                 callback,
             } = command
             // A command has been ran
-            if(devOnly === true) {
-                if(message.author.id !== "493453098199547905") {
+            if (devOnly === true) {
+                if (message.author.id !== "493453098199547905") {
                     return message.channel.send({ content: "This command is currently disabled! Join our support server for more information." })
                 }
             }

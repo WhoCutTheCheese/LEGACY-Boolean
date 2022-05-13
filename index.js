@@ -144,5 +144,5 @@ client.on('messageCreate', async message => {
     });
 });
 client.mongoose.init();
-client.login("OTY2NjM0NTIyMTA2MDM2MjY1.YmEmjQ.ZYlkg6lxIXn00evSngb4yCqJjB8");
+client.login("OTY2NjM0NTIyMTA2MDM2MjY1.GKFLMY.Ox0Y1BMbNkxoqJa-AzYGccXiEheCdSyQgzV-dM");
 //client.login(process.env.token);
